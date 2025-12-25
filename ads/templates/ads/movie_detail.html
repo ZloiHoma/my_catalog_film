@@ -1,0 +1,72 @@
+{% extends 'ads/base.html' %}
+
+{% block content %}
+<div class="movie-detail">
+    {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" alt="{{ movie.title }}" class="poster-large">
+    {% endif %}
+    <h2>{{ movie.title }} ({{ movie.year }})</h2>
+    <p><strong>Режиссёр:</strong> {{ movie.director }}</p>
+    <p><strong>Описание:</strong> {{ movie.description|default:"Описание отсутствует" }}</p>
+
+    <h3>Актёры:</h3>
+    <ul>
+        {% for actor in movie.actors.all %}
+            <li>{{ actor.name }}</li>
+        {% empty %}
+            <li>Актёры не указаны</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Отзывы -->
+    <hr>
+    <h3>Отзывы ({{ reviews.count }})</h3>
+
+    {% if reviews %}
+      <div class="reviews">
+        {% for review in reviews %}
+          <div class="review mb-3 p-3 border rounded">
+            <strong>{{ review.author_name }}</strong>
+            <span class="ms-2">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %}
+                  ★
+                {% else %}
+                  ☆
+                {% endif %}
+              {% endfor %}
+            </span>
+            <br>
+            <small class="text-muted">{{ review.created_at|date:"d.m.Y H:i" }}</small>
+            {% if review.text %}
+              <p class="mt-2">{{ review.text }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Пока нет отзывов.</p>
+    {% endif %}
+
+    <!-- Форма отзыва -->
+    <h3 class="mt-4">Оставить отзыв</h3>
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.author_name.label_tag }}
+        {{ form.author_name }}
+      </div>
+      <div class="mb-3">
+        {{ form.rating.label_tag }}
+        {{ form.rating }}
+      </div>
+      <div class="mb-3">
+        {{ form.text.label_tag }}
+        {{ form.text }}
+      </div>
+      <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+
+    <a href="{% url 'movie_list' %}">← Назад к списку</a>
+</div>
+{% endblock %}

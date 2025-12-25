@@ -1,0 +1,17 @@
+{% extends 'ads/base.html' %}
+
+{% block content %}
+<h2>Топ-5 любимых фильмов</h2>
+<ol class="top-list">
+    {% for movie in movies %}
+    <li>
+        <a href="{% url 'movie_detail' movie.id %}">
+            {{ movie.title }} ({{ movie.year }})
+        </a>
+    </li>
+    {% empty %}
+    <li>Нет фильмов в топе</li>
+    {% endfor %}
+</ol>
+<a href="{% url 'movie_list' %}">← К списку всех фильмов</a>
+{% endblock %}

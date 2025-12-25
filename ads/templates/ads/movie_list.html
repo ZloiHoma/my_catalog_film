@@ -1,0 +1,21 @@
+{% extends 'ads/base.html' %}
+
+{% block content %}
+<div class="movies-grid">
+    {% for movie in movies %}
+    <div class="movie-card">
+        <a href="{% url 'movie_detail' movie.id %}">
+            {% if movie.poster %}
+                <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+            {% else %}
+                <div class="no-poster">Нет постера</div>
+            {% endif %}
+            <h3>{{ movie.title }}</h3>
+            <p>{{ movie.year }}</p>
+        </a>
+    </div>
+    {% empty %}
+    <p>Фильмы ещё не добавлены.</p>
+    {% endfor %}
+</div>
+{% endblock %}
